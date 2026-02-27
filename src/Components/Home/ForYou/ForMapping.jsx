@@ -1,22 +1,22 @@
-import React from "react";
 import forYou from "../../../Data/ForYou/ForYou.js";
-import ForCard from "./ForYouCard.jsx"
+import ForCard from "./ForYouCard.jsx";
 
 const ForMapping = () => {
-    return (
-        <div className=" flex flex-col items-center gap-5 md:flex-row md:justify-center md:gap-8 ">
-            {forYou.map((product) => {
-                return (
-                    <ForCard
-                        key={product.id}
-                        imgSource={product.imgSource}
-                        title={product.title}
-                        description={product.description}
-                    />
-                );
-            })}
-        </div>
-    );
+  return (
+    <div className="w-full max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10">
+        {forYou.map((item, index) => (
+          <ForCard
+            key={item.id}
+            imgSource={item.imgSource}
+            title={item.title}
+            description={item.description}
+            index={index}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default ForMapping;
