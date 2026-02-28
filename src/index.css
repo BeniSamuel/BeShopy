@@ -59,6 +59,15 @@
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
   }
 
+  .hide-x-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .hide-x-scrollbar::-webkit-scrollbar {
+    height: 0;
+  }
+
   @keyframes cartItem {
     0% {
       transform: translateY(-8px);

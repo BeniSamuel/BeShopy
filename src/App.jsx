@@ -1,9 +1,10 @@
-import React, { lazy, Suspense } from "react";
+import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import CartProvider from "./Context/CartProvider";
 import SearchProvider from "./Context/SearchProvider";
 import WishlistProvider from "./Context/WishlistProvider";
+import VendorProvider from "./Context/VendorProvider";
 
 // Lazy load your components
 const Home = lazy(() => import("./Pages/Home/Home"));
@@ -18,6 +19,8 @@ const Checkout = lazy(() => import("./Pages/Checkout/Checkout"));
 const Features = lazy(() => import("./Pages/Features/Features"));
 const Profile = lazy(() => import("./Pages/Profile/Profile"));
 const NotFound = lazy(() => import("./Pages/NotFound/NotFound"));
+const VendorLogin = lazy(() => import("./Pages/Vendor/VendorLogin"));
+const VendorDashboard = lazy(() => import("./Pages/Vendor/VendorDashboard"));
 
 // Create a loading component
 const LoadingIndicator = () => (
@@ -45,40 +48,44 @@ const LoadingIndicator = () => (
 
 const App = () => {
   return (
-    <CartProvider>
-      <WishlistProvider>
-        <SearchProvider>
-          <Suspense fallback={<LoadingIndicator />}>
-            <Router>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/product/:id" element={<Product />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/wishlist" element={<Wishlist />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/features" element={<Features />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-              <Toaster
-                position="bottom-right"
-                toastOptions={{
-                  style: {
-                    color: "black",
-                    fontFamily: "poppins",
-                    duration: 10000,
-                  },
-                }}
-              />
-            </Router>
-          </Suspense>
-        </SearchProvider>
-      </WishlistProvider>
-    </CartProvider>
+    <VendorProvider>
+      <CartProvider>
+        <WishlistProvider>
+          <SearchProvider>
+            <Suspense fallback={<LoadingIndicator />}>
+              <Router>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/signup" element={<Signup />} />
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/product/:id" element={<Product />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/cart" element={<Cart />} />
+                  <Route path="/wishlist" element={<Wishlist />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/features" element={<Features />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/vendor/login" element={<VendorLogin />} />
+                  <Route path="/vendor/dashboard" element={<VendorDashboard />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <Toaster
+                  position="bottom-right"
+                  toastOptions={{
+                    style: {
+                      color: "black",
+                      fontFamily: "poppins",
+                      duration: 10000,
+                    },
+                  }}
+                />
+              </Router>
+            </Suspense>
+          </SearchProvider>
+        </WishlistProvider>
+      </CartProvider>
+    </VendorProvider>
   );
 };
 
