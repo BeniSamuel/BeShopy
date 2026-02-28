@@ -133,14 +133,14 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="relative bg-gradient-to-br from-[#6BC785] to-[#4CAF6E] h-[28rem] md:h-[33rem] w-full md:w-[45%] rounded-tl-[9rem] rounded-br-[9rem] rounded-tr-[1rem] rounded-bl-[1rem] flex flex-col items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300 animate-slideUp">
+      <div className="relative bg-gradient-to-br from-[#6BC785] to-[#4CAF6E] h-[28rem] md:h-[36rem] w-full md:w-[45%] rounded-tl-[9rem] rounded-br-[9rem] rounded-tr-[1rem] rounded-bl-[1rem] flex flex-col items-center justify-center shadow-2xl transform hover:scale-105 transition-all duration-300 animate-slideUp">
         <div className="absolute top-4 right-4 bg-white px-4 py-2 rounded-full shadow-lg">
           <span className="text-[#224F34] font-poppins font-bold">50% OFF</span>
         </div>
 
         <img
           src={hero_img}
-          className="h-[24rem] md:h-[28rem] object-contain drop-shadow-2xl"
+          className="h-[24rem] md:h-[34rem] object-contain drop-shadow-2xl"
           alt="Fashion Hero"
         />
 
