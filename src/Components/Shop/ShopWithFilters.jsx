@@ -1,19 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import productData from '../../Data/OurProduct/sale';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useSearch } from '../../Context/SearchProvider';
 import { useWishlist } from '../../Context/WishlistProvider';
+import { useVendor } from '../../Context/VendorProvider';
 import { Link } from 'react-router-dom';
 
 const ShopWithFilters = () => {
+  const [searchParams] = useSearchParams();
+  const vendorFromUrl = searchParams.get('vendor') || 'all';
   const { searchQuery, setSearchQuery } = useSearch();
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { getAllProducts } = useVendor();
+  const productData = getAllProducts();
   const [filteredProducts, setFilteredProducts] = useState(productData);
   const [sortBy, setSortBy] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedRating, setSelectedRating] = useState(0);
+  const [selectedVendor, setSelectedVendor] = useState(vendorFromUrl);
+  const [aiSuggestionsOpen, setAiSuggestionsOpen] = useState(false);
 
   useEffect(() => {
-    let result = [...productData];
+    setSelectedVendor(vendorFromUrl);
+  }, [vendorFromUrl]);
+
+  useEffect(() => {
+    let result = [...getAllProducts()];
 
     if (searchQuery) {
       result = result.filter(product => 
@@ -23,6 +34,10 @@ const ShopWithFilters = () => {
 
     if (selectedRating > 0) {
       result = result.filter(product => product.rating >= selectedRating);
+    }
+
+    if (selectedVendor !== 'all') {
+      result = result.filter(product => product.vendorId === selectedVendor);
     }
 
     result = result.filter(product => 
@@ -47,17 +62,18 @@ const ShopWithFilters = () => {
     }
 
     setFilteredProducts(result);
-  }, [searchQuery, sortBy, priceRange, selectedRating]);
+  }, [searchQuery, sortBy, priceRange, selectedRating, selectedVendor, productData]);
 
   const clearFilters = () => {
     setSearchQuery('');
     setSortBy('default');
     setPriceRange([0, 100]);
     setSelectedRating(0);
+    setSelectedVendor('all');
   };
 
   return (
-    <div className="py-12 px-6 md:px-20">
+    <div className="py-12 px-6 md:px-20 relative">
       <div className="flex flex-col lg:flex-row gap-8">
         <div className="lg:w-1/4">
           <div className="bg-white rounded-lg shadow-lg p-6 sticky top-24">
@@ -90,6 +106,46 @@ const ShopWithFilters = () => {
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#224F34]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div className="mb-6">
+              <label className="block text-[#224F34] font-poppins font-semibold mb-3">
+                Vendor
+              </label>
+              <div className="relative">
+                <select
+                  value={selectedVendor}
+                  onChange={(e) => setSelectedVendor(e.target.value)}
+                  className="w-full pl-4 pr-10 py-2 border-2 border-[#224F34] rounded-md outline-none font-poppins appearance-none bg-white"
+                >
+                  <option value="all">All Vendors</option>
+                  {Array.from(
+                    new Map(
+                      productData.map((p) => [p.vendorId, p.vendorName])
+                    ).entries()
+                  ).map(([id, name]) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-4 w-4 text-[#224F34]"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
               </div>
@@ -213,6 +269,66 @@ const ShopWithFilters = () => {
             </div>
           )}
         </div>
+      </div>
+
+      {/* AI Suggestions floating widget */}
+      <div className="fixed bottom-6 right-6 z-40">
+        <button
+          onClick={() => setAiSuggestionsOpen(!aiSuggestionsOpen)}
+          className="flex items-center gap-2 bg-[#224F34] text-white px-4 py-3 rounded-full shadow-lg hover:bg-[#1a3d28] transition-all font-poppins font-semibold"
+          title="AI Product Suggestions"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+          </svg>
+          AI Suggestions
+        </button>
+
+        {aiSuggestionsOpen && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/30 z-40"
+              onClick={() => setAiSuggestionsOpen(false)}
+              aria-hidden="true"
+            />
+            <div className="absolute bottom-14 right-0 w-[340px] max-h-[420px] bg-white rounded-2xl shadow-2xl border-2 border-[#C5F5D6] overflow-hidden z-50 animate-slideUp">
+              <div className="p-4 bg-[#224F34] text-white">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-poppins font-bold">AI Suggestions for You</h3>
+                  <button
+                    onClick={() => setAiSuggestionsOpen(false)}
+                    className="p-1 hover:bg-white/20 rounded"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                <p className="font-poppins text-sm text-[#C2EFD4] mt-1">
+                  Personalized picks based on your taste
+                </p>
+              </div>
+              <div className="p-4 max-h-[320px] overflow-y-auto">
+                <div className="space-y-3">
+                  <div className="p-3 bg-[#F8FFF9] rounded-lg border border-[#C5F5D6]">
+                    <p className="font-poppins text-sm text-[#6F6F6F]">Connect your AI (e.g. Hugging Face) to get personalized product suggestions here.</p>
+                  </div>
+                  <div className="grid gap-2">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="flex gap-3 p-3 bg-gray-50 rounded-lg animate-pulse">
+                        <div className="w-14 h-14 bg-gray-200 rounded" />
+                        <div className="flex-1">
+                          <div className="h-3 bg-gray-200 rounded w-3/4 mb-2" />
+                          <div className="h-3 bg-gray-200 rounded w-1/2" />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
