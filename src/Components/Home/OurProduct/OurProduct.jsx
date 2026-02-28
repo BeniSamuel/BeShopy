@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import OurState from "./OurState";
 import OurMapping from "./OurMapping";
 
+// eslint-disable-next-line react/prop-types
 const OurProduct = ({ title }) => {
   const [tab, setTab] = useState("sale");
   const scrollRef = useRef(null);
@@ -82,7 +83,7 @@ const OurProduct = ({ title }) => {
           </svg>
         </button>
 
-        <OurMapping tab={tab} scrollRef={scrollRef} />
+        <OurMapping tab={tab} scrollRef={scrollRef} scrollClassName="hide-x-scrollbar" />
       </div>
     </section>
   );
