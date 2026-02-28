@@ -72,18 +72,17 @@ const TestMapping = () => {
       <div className="flex flex-row gap-6">
         <button
           onClick={handlePrev}
-          className="flex flex-col items-center justify-center px-5 py-3 shadow-slate-300 shadow-lg bg-white rounded-full hover:bg-[#C2EFD4] transition"
-          aria-label="Previous testimonial"
-        >
-          <img src={left} alt="Previous" />
-        </button>
-
-        <button
-          onClick={handleNext}
-          className="flex flex-col items-center justify-center px-5 py-3 bg-[#C2EFD4] shadow-lg shadow-slate-300 rounded-full hover:bg-white hover:shadow-lg hover:shadow-slate-300 transition"
+          className="flex flex-col items-center justify-center px-5 py-3 bg-[#C2EFD4] shadow-lg shadow-slate-300 rounded-2xl hover:bg-white hover:shadow-lg hover:shadow-slate-300 transition"
           aria-label="Next testimonial"
         >
           <img src={right} alt="Next" />
+        </button>
+        <button
+          onClick={handleNext}
+          className="flex flex-col items-center justify-center px-5 py-3 shadow-slate-300 shadow-lg bg-white rounded-2xl hover:bg-[#C2EFD4] transition"
+          aria-label="Previous testimonial"
+        >
+          <img src={left} alt="Previous" />
         </button>
       </div>
     </div>
