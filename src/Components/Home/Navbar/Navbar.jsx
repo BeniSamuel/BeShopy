@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import cart from "../../../assets/cart.svg";
 import CartCount from "../../Cart/CartCount";
@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [section, setSection] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { searchQuery, setSearchQuery, isSearchOpen, toggleSearch } = useSearch();
+  const { setSearchQuery, isSearchOpen, toggleSearch } = useSearch();
   const { wishlist } = useWishlist();
   const [localSearchQuery, setLocalSearchQuery] = useState("");
 
