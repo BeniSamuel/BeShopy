@@ -14,28 +14,36 @@ const productData = [
         imgSource : img1,
         description: "Spread Collar Shirt",
         price: 38.99,
-        rating: 5.0
+        rating: 5.0,
+        vendorId: "v1",
+        vendorName: "Modern Threads"
     },
     {
         id: 2,
         imgSource : img2,
         description: "White Solid Formal Shirt",
         price: 62.99,
-        rating: 4.9
+        rating: 4.9,
+        vendorId: "v2",
+        vendorName: "Urban Vogue"
     },
     {
         id: 3,
         imgSource : img3,
         description: "Shine On Me Blouse",
         price: 49.99,
-        rating: 4.7
+        rating: 4.7,
+        vendorId: "v1",
+        vendorName: "Modern Threads"
     },
     {
         id: 4,
         imgSource : img4,
         description: "Gray Solid Padded Jacket",
         price: 38.99,
-        rating: 5.0
+        rating: 5.0,
+        vendorId: "v3",
+        vendorName: "Classic Couture"
     },
     // {
     //     id: 5,
