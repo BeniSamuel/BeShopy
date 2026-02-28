@@ -2,10 +2,10 @@ import img1 from "../../assets/OurProduct/ourProduct_1.png"
 import img2 from "../../assets/OurProduct/ourProduct_2.png"
 import img3 from "../../assets/OurProduct/ourProduct_3.png"
 import img4 from "../../assets/OurProduct/ourProduct_4.png"
-import img5 from "../../assets/OurProduct/ourProduct_5.png"
-import img6 from "../../assets/OurProduct/ourProduct_6.png"
-import img7 from "../../assets/OurProduct/ourProduct_7.png"
-import img8 from "../../assets/OurProduct/ourProduct_8.png"
+// import img5 from "../../assets/OurProduct/ourProduct_5.png"
+// import img6 from "../../assets/OurProduct/ourProduct_6.png"
+// import img7 from "../../assets/OurProduct/ourProduct_7.png"
+// import img8 from "../../assets/OurProduct/ourProduct_8.png"
 
 
 const productData = [
