@@ -1,22 +1,37 @@
-import React, { useState } from 'react'
-import products from "../../Data/OurProduct/sale";
+import { useState } from 'react'
 import starSvg from '../../assets/star.svg'
 import ProductCu from './ProductCu';
 import ProdCout from './ProdCout';
 import { useWishlist } from '../../Context/WishlistProvider';
+import { useVendor } from '../../Context/VendorProvider';
 
+// eslint-disable-next-line react/prop-types
 const ProductCP = ({ id }) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const { toggleWishlist, isInWishlist } = useWishlist();
+  const { subscribeToVendor, unsubscribeFromVendor, isSubscribedToVendor, getVendorById, getAllProducts } = useVendor();
+  const products = getAllProducts();
+  const productExists = products.some((p) => String(p.id) === String(id));
+
+  if (!productExists) {
+    return (
+      <div className="py-16 px-6 md:px-20 text-center">
+        <h2 className="font-poppins font-bold text-2xl text-[#224F34] mb-2">Product not found</h2>
+        <p className="font-poppins text-[#6F6F6F]">The product you&apos;re looking for may have been removed.</p>
+      </div>
+    );
+  }
 
   return (
     <div>
       {
         products.map((product) => {
-          if (product.id === parseInt(id)) {
+          if (String(product.id) !== String(id)) return null;
             const images = [product.imgSource, product.imgSource, product.imgSource];
-            
+            const vendor = getVendorById(product.vendorId);
+            const isSubscribed = isSubscribedToVendor(product.vendorId);
+
             return (
               <div key={product.id} className='flex flex-col gap-8 md:gap-20 items-center md:flex-row py-16 px-6 md:px-20'>
                 <div className='flex flex-col md:flex-row gap-4 md:gap-8 w-full md:w-1/2'>
@@ -79,6 +94,32 @@ const ProductCP = ({ id }) => {
                       {product.description}
                     </h1>
                     
+                    {vendor && (
+                      <div className="flex flex-row items-center gap-3">
+                        <span className="font-poppins text-sm text-[#6F6F6F]">
+                          Sold by
+                        </span>
+                        <span className="font-poppins font-semibold text-[#224F34]">
+                          {vendor.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() =>
+                            isSubscribed
+                              ? unsubscribeFromVendor(product.vendorId)
+                              : subscribeToVendor(product.vendorId)
+                          }
+                          className={`text-xs font-poppins px-3 py-1 rounded-full border transition-all ${
+                            isSubscribed
+                              ? "bg-[#224F34] text-white border-[#224F34]"
+                              : "bg-white text-[#224F34] border-[#C5F5D6] hover:bg-[#C5F5D6]"
+                          }`}
+                        >
+                          {isSubscribed ? "Subscribed" : "Subscribe"}
+                        </button>
+                      </div>
+                    )}
+                    
                     <div className='flex flex-row items-center gap-3'>
                       <div className='flex flex-row'>
                         {[...Array(5)].map((_, i) => (
@@ -94,7 +135,7 @@ const ProductCP = ({ id }) => {
                     </div>
                     
                     <div className='font-poppins font-bold text-4xl text-[#224F34] mt-2'>
-                      ${product.price.toFixed(2)}
+                      ${product.price?.toFixed(2) ?? "0.00"}
                     </div>
                   </div>
                   
@@ -105,7 +146,7 @@ const ProductCP = ({ id }) => {
                     <p className='font-poppins text-gray-700 leading-relaxed'>
                       Experience premium quality with this carefully crafted fashion piece. 
                       Made from high-quality materials, this item combines style and comfort 
-                      perfectly. Whether you're dressing up for a special occasion or keeping 
+                      perfectly. Whether you&apos;re dressing up for a special occasion or keeping 
                       it casual, this versatile piece will elevate your wardrobe.
                     </p>
                   </div>
@@ -135,9 +176,7 @@ const ProductCP = ({ id }) => {
                   <ProdCout price={product.price} prod={product}/>
                 </div>
               </div>
-            )
-          }
-          return null;
+            );
         })
       }
     </div>
