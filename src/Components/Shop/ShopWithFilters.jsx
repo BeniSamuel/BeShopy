@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useSearch } from '../../Context/SearchProvider';
 import { useWishlist } from '../../Context/WishlistProvider';
@@ -11,8 +11,7 @@ const ShopWithFilters = () => {
   const { searchQuery, setSearchQuery } = useSearch();
   const { toggleWishlist, isInWishlist } = useWishlist();
   const { getAllProducts } = useVendor();
-  const productData = getAllProducts();
-  const [filteredProducts, setFilteredProducts] = useState(productData);
+  const productData = useMemo(() => getAllProducts(), [getAllProducts]);
   const [sortBy, setSortBy] = useState('default');
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [selectedRating, setSelectedRating] = useState(0);
@@ -23,11 +22,11 @@ const ShopWithFilters = () => {
     setSelectedVendor(vendorFromUrl);
   }, [vendorFromUrl]);
 
-  useEffect(() => {
-    let result = [...getAllProducts()];
+  const filteredProducts = useMemo(() => {
+    let result = [...productData];
 
     if (searchQuery) {
-      result = result.filter(product => 
+      result = result.filter(product =>
         product.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
@@ -40,7 +39,7 @@ const ShopWithFilters = () => {
       result = result.filter(product => product.vendorId === selectedVendor);
     }
 
-    result = result.filter(product => 
+    result = result.filter(product =>
       product.price >= priceRange[0] && product.price <= priceRange[1]
     );
 
@@ -61,7 +60,7 @@ const ShopWithFilters = () => {
         break;
     }
 
-    setFilteredProducts(result);
+    return result;
   }, [searchQuery, sortBy, priceRange, selectedRating, selectedVendor, productData]);
 
   const clearFilters = () => {
@@ -335,3 +334,4 @@ const ShopWithFilters = () => {
 };
 
 export default ShopWithFilters;
+

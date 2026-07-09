@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { toast } from "react-hot-toast";
 import vendorsData from "../Data/Vendors/vendors";
 import productData from "../Data/OurProduct/sale";
@@ -107,7 +107,7 @@ const VendorProvider = ({ children }) => {
     return [...fromData, ...state.added];
   };
 
-  const getAllProducts = () => {
+  const getAllProducts = useCallback(() => {
     const allAdded = Object.values(vendorProductState).flatMap((s) => s.added || []);
     const allDeleted = new Set(Object.values(vendorProductState).flatMap((s) => s.deletedIds || []));
     const fromData = productData.filter((p) => !allDeleted.has(p.id));
@@ -119,7 +119,7 @@ const VendorProvider = ({ children }) => {
     });
     const mergedData = fromData.map((p) => (editsMap[p.id] ? { ...p, ...editsMap[p.id] } : p));
     return [...mergedData, ...allAdded];
-  };
+  }, [vendorProductState]);
 
   const addVendorProduct = (vendorId, product) => {
     const id = `vp_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -245,4 +245,5 @@ const VendorProvider = ({ children }) => {
 };
 
 export default VendorProvider;
+
 

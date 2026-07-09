@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { toast } from 'react-hot-toast'
 import facebook from '../../../assets/Facebook.svg'
@@ -7,27 +7,7 @@ import twitter from '../../../assets/Twitter.svg'
 
 const Footer = () => {
   const [email, setEmail] = useState('');
-
-  // Optimized year calculator - only recalculates when component mounts or year changes
-  const currentYear = useMemo(() => {
-    return new Date().getFullYear();
-  }, []);
-
-  // Optional: Update year at midnight on New Year's Day
-  useEffect(() => {
-    const now = new Date();
-    const nextYear = new Date(now.getFullYear() + 1, 0, 1, 0, 0, 0);
-    const timeUntilNewYear = nextYear.getTime() - now.getTime();
-
-    // Only set timeout if we're within the same year (not more than 1 year away)
-    if (timeUntilNewYear > 0 && timeUntilNewYear < 365 * 24 * 60 * 60 * 1000) {
-      const timer = setTimeout(() => {
-        window.location.reload(); // Reload page at midnight on New Year
-      }, timeUntilNewYear);
-
-      return () => clearTimeout(timer);
-    }
-  }, []);
+  const currentYear = new Date().getFullYear();
 
   const handleNewsletterSubmit = (e) => {
     e.preventDefault();
@@ -232,3 +212,4 @@ const Footer = () => {
 }
 
 export default Footer
+

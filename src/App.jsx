@@ -46,42 +46,49 @@ const LoadingIndicator = () => (
   </div>
 );
 
+const lazyPage = (Page) => (
+  <Suspense fallback={<LoadingIndicator />}>
+    <Page />
+  </Suspense>
+);
+
 const App = () => {
   return (
     <VendorProvider>
       <CartProvider>
         <WishlistProvider>
           <SearchProvider>
-            <Suspense fallback={<LoadingIndicator />}>
-              <Router>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/shop" element={<Shop />} />
-                  <Route path="/product/:id" element={<Product />} />
-                  <Route path="/contact" element={<Contact />} />
-                  <Route path="/cart" element={<Cart />} />
-                  <Route path="/wishlist" element={<Wishlist />} />
-                  <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/features" element={<Features />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/vendor/login" element={<VendorLogin />} />
-                  <Route path="/vendor/dashboard" element={<VendorDashboard />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-                <Toaster
-                  position="bottom-right"
-                  toastOptions={{
-                    style: {
-                      color: "black",
-                      fontFamily: "poppins",
-                      duration: 10000,
-                    },
-                  }}
+            <Router>
+              <Routes>
+                <Route path="/" element={lazyPage(Home)} />
+                <Route path="/login" element={lazyPage(Login)} />
+                <Route path="/signup" element={lazyPage(Signup)} />
+                <Route path="/shop" element={lazyPage(Shop)} />
+                <Route path="/product/:id" element={lazyPage(Product)} />
+                <Route path="/contact" element={lazyPage(Contact)} />
+                <Route path="/cart" element={lazyPage(Cart)} />
+                <Route path="/wishlist" element={lazyPage(Wishlist)} />
+                <Route path="/checkout" element={lazyPage(Checkout)} />
+                <Route path="/features" element={lazyPage(Features)} />
+                <Route path="/profile" element={lazyPage(Profile)} />
+                <Route path="/vendor/login" element={lazyPage(VendorLogin)} />
+                <Route
+                  path="/vendor/dashboard"
+                  element={lazyPage(VendorDashboard)}
                 />
-              </Router>
-            </Suspense>
+                <Route path="*" element={lazyPage(NotFound)} />
+              </Routes>
+              <Toaster
+                position="bottom-right"
+                toastOptions={{
+                  style: {
+                    color: "black",
+                    fontFamily: "poppins",
+                    duration: 10000,
+                  },
+                }}
+              />
+            </Router>
           </SearchProvider>
         </WishlistProvider>
       </CartProvider>
@@ -90,3 +97,4 @@ const App = () => {
 };
 
 export default App;
+
